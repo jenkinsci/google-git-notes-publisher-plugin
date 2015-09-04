@@ -44,6 +44,18 @@
     <powermock.version>1.6.0</powermock.version>
   </properties>
 
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<configuration>
+          <argLine>-XX:MaxPermSize=128M</argLine>
+	</configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
     <!-- Gson dependency -->
     <dependency>
