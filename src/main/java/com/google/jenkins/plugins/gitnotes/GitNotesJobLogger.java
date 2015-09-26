@@ -127,18 +127,35 @@ public class GitNotesJobLogger extends BuildWrapper {
       }
 
       URIish remoteURI = remoteConfig.getURIs().get(0);
-      if (gitClient.refExists(GIT_NOTES_REFS)) {
+      try {
         ArrayList<RefSpec> refs = new ArrayList<RefSpec>();
         refs.add(new RefSpec(
             String.format("+%s:%s", GIT_NOTES_REFS, GIT_NOTES_REFS)));
         FetchCommand fetch = gitClient.fetch_().from(remoteURI, refs);
         fetch.execute();
-      } else {
-        gitClient.ref(GIT_NOTES_REFS);
-        PushCommand push = gitClient.push().to(remoteURI).ref(GIT_NOTES_REFS);
-        push.execute();
+      } catch (GitException e) {
+        // This could be a normal case, when the remote doesn't have the
+        // expected git-notes reference yet. The git library doesn't return
+        // a dedicated exception type for "reference not found", so we
+        // would just ignore all GitExceptions here.
+        listener.getLogger().printf(
+            "Caught GitException: %s. Most likely remote doesn't have " +
+            "git notes reference %s", e.getMessage(), GIT_NOTES_REFS);
       }
-
+      if (!gitClient.refExists(GIT_NOTES_REFS)) {
+        try {
+          gitClient.ref(GIT_NOTES_REFS);
+          PushCommand push = gitClient.push().to(remoteURI).ref(GIT_NOTES_REFS);
+          push.execute();
+        } catch (GitException e) {
+          // if the push failed, we should remove locally created GIT_NOTES_REFS
+          listener.getLogger().printf(
+              "Failed to push %s, removing locally created notes refs",
+              GIT_NOTES_REFS);
+          gitClient.deleteRef(GIT_NOTES_REFS);
+          throw e;
+        }
+      }
       gitClient.appendNote(message.toString(), GIT_NOTES_REFS);
 
       PushCommand push = gitClient.push().to(remoteURI).ref(GIT_NOTES_REFS);
@@ -146,7 +163,6 @@ public class GitNotesJobLogger extends BuildWrapper {
     } catch (GitException e) {
       e.printStackTrace(
           listener.error("Caught git-notes exception. " + e.getMessage()));
-      return;
     } catch (IOException e) {
       e.printStackTrace(listener.error(e.getMessage()));
     } catch (InterruptedException e) {
