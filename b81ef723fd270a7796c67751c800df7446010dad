@@ -1,0 +1,1 @@
+{"timestamp":"1443461370","reviewRef":"refs/heads/weizheng-always-pull-ref-first","targetRef":"refs/heads/master","requester":"weizheng@google.com","reviewers":["astroilov"],"description":"always pull git notes ref first"}
