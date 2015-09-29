@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>google-git-notes-publisher</artifactId>
-  <version>0.2-SNAPSHOT</version>
+  <version>0.2</version>
   <packaging>hpi</packaging>
 
   <name>Google Git Notes Publisher Plugin</name>
@@ -28,7 +28,7 @@
     <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
     <url>http://github.com/jenkinsci/${project.artifactId}-plugin</url>
-    <tag>HEAD</tag>
+    <tag>google-git-notes-publisher-0.2</tag>
   </scm>
 
   <pluginRepositories>
