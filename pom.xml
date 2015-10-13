@@ -23,6 +23,14 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/Google+Git+Notes+Publisher+Plugin</url>
+
+  <developers>
+    <developer>
+      <id>astroilov</id>
+      <name>Andrey Stroilov</name>
+    </developer>
+  </developers>
 
   <scm>
     <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
